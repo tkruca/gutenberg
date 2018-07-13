@@ -482,6 +482,11 @@ export function isEditedPostAutosaveable( state ) {
 		return false;
 	}
 
+	// If the post is not dirty there is no need to perform an autosave.
+	if ( ! isEditedPostDirty( state ) ) {
+		return false;
+	}
+
 	// If we don't already have an autosave, the post is autosaveable.
 	if ( ! hasAutosave( state ) ) {
 		return true;
