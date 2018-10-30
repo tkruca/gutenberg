@@ -27,7 +27,7 @@ const { ELEMENT_NODE, TEXT_NODE } = window.Node;
  * @return {Object} A complete block content schema.
  */
 export function getBlockContentSchema( transforms ) {
-	const schemas = transforms.map( ( { blockName, schema } ) => {
+	const schemas = transforms.map( ( { isMatch, blockName, schema } ) => {
 		// If the block supports the "anchor" functionality, it needs to keep its ID attribute.
 		if ( hasBlockSupport( blockName, 'anchor' ) ) {
 			for ( const tag in schema ) {
@@ -37,18 +37,35 @@ export function getBlockContentSchema( transforms ) {
 				schema[ tag ].attributes.push( 'id' );
 			}
 		}
+		if ( isMatch ) {
+			for ( const tag in schema ) {
+				schema[ tag ].isMatch = isMatch;
+			}
+		}
 		return schema;
 	} );
 
 	return mergeWith( {}, ...schemas, ( objValue, srcValue, key ) => {
-		if ( key === 'children' ) {
-			if ( objValue === '*' || srcValue === '*' ) {
-				return '*';
-			}
+		switch ( key ) {
+			case 'children': {
+				if ( objValue === '*' || srcValue === '*' ) {
+					return '*';
+				}
 
-			return { ...objValue, ...srcValue };
-		} else if ( key === 'attributes' || key === 'require' ) {
-			return [ ...( objValue || [] ), ...( srcValue || [] ) ];
+				return { ...objValue, ...srcValue };
+			}
+			case 'attributes':
+			case 'require': {
+				return [ ...( objValue || [] ), ...( srcValue || [] ) ];
+			}
+			case 'isMatch': {
+				if ( ! objValue || ! srcValue ) {
+					return undefined;
+				}
+				return ( ...args ) => {
+					return objValue( ...args ) || srcValue( ...args );
+				};
+			}
 		}
 	} );
 }
@@ -154,7 +171,10 @@ function cleanNodeList( nodeList, doc, schema, inline ) {
 		const tag = node.nodeName.toLowerCase();
 
 		// It's a valid child.
-		if ( schema.hasOwnProperty( tag ) ) {
+		if (
+			schema.hasOwnProperty( tag ) &&
+			( ! schema[ tag ].isMatch || schema[ tag ].isMatch( node ) )
+		) {
 			if ( node.nodeType === ELEMENT_NODE ) {
 				const { attributes = [], classes = [], children, require = [] } = schema[ tag ];
 
