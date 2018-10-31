@@ -182,7 +182,11 @@ export class PostPreviewButton extends Component {
 						__( '(opens in a new tab)' )
 					}
 				</span>
-				<DotTip tipId="core/editor.preview">
+				<DotTip
+					tipId="core/editor.preview"
+					isCollapsible
+					className="editor-post-preview__tip"
+				>
 					{ __( 'Click “Preview” to load a preview of this page, so you can make sure you’re happy with your blocks.' ) }
 				</DotTip>
 			</Button>
