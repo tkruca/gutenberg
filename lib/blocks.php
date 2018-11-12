@@ -178,7 +178,7 @@ if ( ! function_exists( 'do_blocks' ) ) {
 		$priority = has_filter( 'the_content', 'wpautop' );
 		if ( false !== $priority && doing_filter( 'the_content' ) && has_blocks( $content ) ) {
 			remove_filter( 'the_content', 'wpautop', $priority );
-			add_filter( 'the_content', 'wpautop', $priority + 1 );
+			add_filter( 'the_content', '_restore_wpautop_hook', $priority + 1 );
 		}
 
 		$blocks = gutenberg_parse_blocks( $content );
