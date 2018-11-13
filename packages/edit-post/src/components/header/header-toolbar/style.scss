@@ -23,8 +23,14 @@
 }
 
 .edit-post-header-toolbar__inserter-button-wrapper {
-	display: flex;
 	align-items: center;
+	display: flex;
+	position: relative;
+}
+
+.edit-post-header-toolbar__inserter-button-tip {
+	position: absolute;
+	right: -17px;
 }
 
 // Block toolbar when fixed to the top of the screen.

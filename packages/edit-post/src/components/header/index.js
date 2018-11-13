@@ -65,11 +65,7 @@ function Header( {
 						aria-expanded={ isEditorSidebarOpened }
 						shortcut={ shortcuts.toggleSidebar }
 					/>
-					<DotTip
-						tipId="core/editor.settings"
-						isCollapsible
-						className="edit-post-header__settings-button-tip"
-					>
+					<DotTip tipId="core/editor.settings" className="edit-post-header__settings-button-tip">
 						{ __( 'You’ll find more settings for your page and blocks in the sidebar. Click “Settings” to open it.' ) }
 					</DotTip>
 				</div>

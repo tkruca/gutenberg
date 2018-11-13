@@ -5,7 +5,6 @@ $dot-scale: 3;  // How much the pulse animation should scale up by in size
 	background: $blue-medium-800;
 	border-radius: 100%;
 	border: none;
-	cursor: pointer;
 	height: $dot-size;
 	outline: none;
 	padding: 0;
@@ -35,6 +34,10 @@ $dot-scale: 3;  // How much the pulse animation should scale up by in size
 		transform: scale(1 / $dot-scale);
 		width: $dot-size * $dot-scale;
 	}
+}
+
+button.nux-dot-tip {
+	cursor: pointer;
 }
 
 @keyframes nux-pulse {
