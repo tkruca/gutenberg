@@ -13,7 +13,7 @@ function stopEventPropagation( event ) {
 	event.stopPropagation();
 }
 
-class DotTip extends Component {
+export class DotTip extends Component {
 	constructor( { isCollapsible } ) {
 		super( ...arguments );
 

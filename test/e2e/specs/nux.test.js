@@ -11,12 +11,15 @@ import {
 
 describe( 'New User Experience (NUX)', () => {
 	async function clickAllTips( page ) {
-		// Click through all available tips.
 		const tips = await getTips( page );
 		const numberOfTips = tips.tipIds.length;
 
+		// Open up the first tip.
+		await page.click( '.nux-dot-tip' );
+
+		// Click through all of the tips.
 		for ( let i = 1; i < numberOfTips; i++ ) {
-			await page.click( '.nux-dot-tip .components-button.is-link' );
+			await page.click( '.nux-dot-tip__popover .components-button.is-link' );
 		}
 
 		return { numberOfTips, tips };
@@ -39,25 +42,31 @@ describe( 'New User Experience (NUX)', () => {
 	} );
 
 	it( 'should show tips to a first-time user', async () => {
-		const firstTipText = await page.$eval( '.nux-dot-tip', ( element ) => element.innerText );
+		// Click on the tip indicator to open the first tip.
+		await page.click( '.nux-dot-tip' );
+
+		// Check that we see the first tip.
+		const firstTipText = await page.$eval( '.nux-dot-tip__popover', ( element ) => element.innerText );
 		expect( firstTipText ).toContain( 'Welcome to the wonderful world of blocks!' );
 
+		// Go to the next tip.
 		const [ nextTipButton ] = await page.$x( "//button[contains(text(), 'See next tip')]" );
 		await nextTipButton.click();
 
-		const secondTipText = await page.$eval( '.nux-dot-tip', ( element ) => element.innerText );
+		// Check that we see the second tip.
+		const secondTipText = await page.$eval( '.nux-dot-tip__popover', ( element ) => element.innerText );
 		expect( secondTipText ).toContain( 'You’ll find more settings for your page and blocks in the sidebar.' );
 	} );
 
 	it( 'should show "Got it" once all tips have been displayed', async () => {
 		await clickAllTips( page );
 
-		// Make sure "Got it" button appears on the last tip.
-		const gotItButton = await page.$x( "//button[contains(text(), 'Got it')]" );
+		// Make sure "Dismiss tip" button appears on the last tip.
+		const gotItButton = await page.$x( "//button[contains(text(), 'Dismiss tip')]" );
 		expect( gotItButton ).toHaveLength( 1 );
 
 		// Click the "Got it button".
-		await page.click( '.nux-dot-tip .components-button.is-link' );
+		await page.click( '.nux-dot-tip__popover .components-button.is-link' );
 
 		// Verify no more tips are visible on the page.
 		const nuxTipElements = await page.$$( '.nux-dot-tip' );
@@ -70,6 +79,10 @@ describe( 'New User Experience (NUX)', () => {
 	} );
 
 	it( 'should hide and disable tips if "disable tips" button is clicked', async () => {
+		// Click on the tip indicator to open the first tip.
+		await page.click( '.nux-dot-tip' );
+
+		// Click the X.
 		await page.click( '.nux-dot-tip__disable' );
 
 		// Verify no more tips are visible on the page.
@@ -88,7 +101,10 @@ describe( 'New User Experience (NUX)', () => {
 	} );
 
 	it( 'should enable tips when the "Enable tips" option is toggled on', async () => {
-		// Start by disabling tips.
+		// Click on the tip indicator to open the first tip.
+		await page.click( '.nux-dot-tip' );
+
+		// Click the X to disable tips.
 		await page.click( '.nux-dot-tip__disable' );
 
 		// Verify no more tips are visible on the page.
