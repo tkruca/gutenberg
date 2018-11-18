@@ -18,11 +18,11 @@ function TableOfContents( { hasBlocks } ) {
 			contentClassName="table-of-contents__popover"
 			renderToggle={ ( { isOpen, onToggle } ) => (
 				<IconButton
-					onClick={ onToggle }
+					onClick={ hasBlocks ? onToggle : undefined }
 					icon="info-outline"
 					aria-expanded={ isOpen }
 					label={ __( 'Content structure' ) }
-					disabled={ ! hasBlocks }
+					aria-disabled={ ! hasBlocks }
 				/>
 			) }
 			renderContent={ () => <TableOfContentsPanel /> }
