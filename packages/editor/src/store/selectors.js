@@ -2263,3 +2263,7 @@ export function isPublishSidebarEnabled( state ) {
 	}
 	return PREFERENCES_DEFAULTS.isPublishSidebarEnabled;
 }
+
+export function hasPendingBlockOperations( state ) {
+	return Object.keys( state.editor.present.blocks.transients ).length > 0;
+}

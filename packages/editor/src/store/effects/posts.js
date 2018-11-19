@@ -31,6 +31,7 @@ import {
 	isEditedPostAutosaveable,
 	isEditedPostSaveable,
 	isEditedPostNew,
+	hasPendingBlockOperations,
 	POST_UPDATE_TRANSACTION_ID,
 } from '../selectors';
 import { resolveSelector } from './utils';
@@ -52,6 +53,17 @@ export const requestPostUpdate = async ( action, store ) => {
 	const state = getState();
 	const post = getCurrentPost( state );
 	const isAutosave = !! action.options.autosave;
+
+	if (
+		hasPendingBlockOperations( state ) &&
+		// Disable reason: A blocking prompt is justified to protect against
+		// potential content corruption.
+		//
+		// eslint-disable-next-line no-alert
+		! window.confirm( __( 'A block operation is pending. Are you sure you want to save?' ) )
+	) {
+		return;
+	}
 
 	// Prevent save if not saveable.
 	const isSaveable = isAutosave ? isEditedPostAutosaveable : isEditedPostSaveable;
