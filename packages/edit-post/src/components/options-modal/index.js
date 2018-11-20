@@ -22,6 +22,7 @@ import {
 	EnablePanelOption,
 } from './options';
 import MetaBoxesSection from './meta-boxes-section';
+import PostLinkCheck from './../sidebar/post-link/check';
 
 const MODAL_NAME = 'edit-post/options';
 
@@ -42,6 +43,9 @@ export function OptionsModal( { isModalActive, closeModal } ) {
 				<EnableTipsOption label={ __( 'Enable Tips' ) } />
 			</Section>
 			<Section title={ __( 'Document Panels' ) }>
+				<PostLinkCheck>
+					<EnablePanelOption label={ __( 'Permalink' ) } panelName="post-link" />
+				</PostLinkCheck>
 				<PostTaxonomies
 					taxonomyWrapper={ ( content, taxonomy ) => (
 						<EnablePanelOption
